@@ -1,4 +1,6 @@
 HTMLValid
 =========
 
-Validate your site using W3C's validator.
+Unofficial W3C validator for HTML/CSS files.
+
+Documentation coming soon...
