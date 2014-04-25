@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("HTMLValid")]
-[assembly: AssemblyDescription("Unofficial W3C validator for HTML files.")]
+[assembly: AssemblyDescription("Unofficial W3C validator for HTML/CSS files.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("SoftwareSpot")]
 [assembly: AssemblyProduct("HTMLValid")]
