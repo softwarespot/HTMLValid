@@ -26,7 +26,6 @@ namespace HTMLValid
 
         public readonly HTMLValidFileType FileType;
 
-        // ReadOnly instance fields.
         public readonly bool IsConnected;
 
         public readonly HTMLValidStatus Status;
