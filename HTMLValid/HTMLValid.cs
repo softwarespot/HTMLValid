@@ -42,7 +42,7 @@ namespace HTMLValid
 
     internal class HTMLValid
     {
-        private string userAgent = string.Empty;
+        private string _userAgent = string.Empty;
 
         public HTMLValid()
         {
@@ -58,17 +58,17 @@ namespace HTMLValid
         {
             get
             {
-                return userAgent;
+                return _userAgent;
             }
             set
             {
                 if (!string.IsNullOrWhiteSpace(value)) // If not null or whitespace then set the UserAgent.
                 {
-                    userAgent = value;
+                    _userAgent = value;
                 }
                 else
                 {
-                    userAgent = "HTMLValid";
+                    _userAgent = "HTMLValid";
                 }
             }
         }
@@ -87,7 +87,7 @@ namespace HTMLValid
                 string fileParams = File.ReadAllText(filePath, Encoding.UTF8); // Read the file using UTF8 encoding.
                 fileParams = Uri.EscapeDataString(fileParams); // Encode the file data by escaping certain characters.
 
-                HttpWebResponse webResponse = null;
+                HttpWebResponse webResponse;
                 if (isCSS)
                 {
                     fileType = HTMLValidFileType.CSS;

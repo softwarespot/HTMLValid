@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -31,7 +32,6 @@ namespace HTMLValid
                 if (commandline.ToLower() == "-allfiles")
                 {
                     isErrorsWarningOnly = !isErrorsWarningOnly; // Opposite of what was passed.
-                    continue;
                 }
             }
             return ret;
@@ -135,7 +135,7 @@ namespace HTMLValid
                         Console.WriteLine(); // Empty line.
                         Console.Write("Please enter either Y or N: ");
                     }
-                    userChoice = Console.ReadKey(true).KeyChar.ToString().ToLower(); // Get the char and convert to string and lowercase.
+                    userChoice = Console.ReadKey(true).KeyChar.ToString(CultureInfo.InvariantCulture).ToLower(); // Get the char and convert to string and lowercase.
                     failCount++;
                 }
                 if (userChoice == "n")
@@ -211,12 +211,7 @@ namespace HTMLValid
             Exit(exitCode);
         }
 
-        private static string PathCompactPathEx(string filePath)
-        {
-            return PathCompactPathEx(filePath, 25);
-        }
-
-        private static string PathCompactPathEx(string filePath, int length)
+        private static string PathCompactPathEx(string filePath, int length = 25)
         {
             if (!string.IsNullOrEmpty(filePath) && (filePath.Length - Path.GetFileName(filePath).Length) > length)
             {
