@@ -51,7 +51,7 @@ namespace HTMLValid
         {
             // Set the enironment variables for the application
             Environment.SetEnvironmentVariable("PROGRAMNAME", "HTMLValid");
-            Environment.SetEnvironmentVariable("FILEVERSION", "0.0.0.5");
+            Environment.SetEnvironmentVariable("FILEVERSION", "0.0.0.6");
 
             Console.Write(Environment.ExpandEnvironmentVariables(
                 "=========================================================\n" +
@@ -83,7 +83,7 @@ namespace HTMLValid
             const byte FILECHECK_THRESHOLD = 5;
 
             bool isErrorsWarningOnly = true; // Display only files with errors or warnings
-            string searchPath = string.Empty;
+            string searchPath = String.Empty;
             if (GetCommandLineArgs(commandlineArgs, ref searchPath, ref isErrorsWarningOnly)) // Set the filePath as the one sent to the application as a commandline parameter
             {
                 searchPath = commandlineArgs[0];
@@ -125,7 +125,7 @@ namespace HTMLValid
                     "\n" +
                     "Would you like to continue processing? (Y or N)", FILECHECK_THRESHOLD, fileList.Length, (fileList.Length > 1 ? "s" : ""));
 
-                string userChoice = string.Empty;
+                string userChoice = String.Empty;
                 byte failCount = 0;
                 while (userChoice != "y" && userChoice != "n") // Continue to loop until y or n is entered
                 {
@@ -210,7 +210,7 @@ namespace HTMLValid
 
         private static string PathCompactPathEx(string filePath, int length = 25)
         {
-            if (!string.IsNullOrEmpty(filePath) && (filePath.Length - Path.GetFileName(filePath).Length) > length)
+            if (!String.IsNullOrEmpty(filePath) && (filePath.Length - Path.GetFileName(filePath).Length) > length)
             {
                 filePath = Regex.Replace(filePath, @"^(.{" + length + @"}).+?([^\\]+)$", @"$1...\$2"); // Shorten the path but still retaining the file name length
             }

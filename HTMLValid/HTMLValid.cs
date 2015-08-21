@@ -42,7 +42,7 @@ namespace HTMLValid
 
     internal class HtmlValid
     {
-        private string _userAgent = string.Empty;
+        private string _userAgent = String.Empty;
 
         public HtmlValid()
         {
@@ -62,7 +62,7 @@ namespace HTMLValid
             }
             set
             {
-                if (!string.IsNullOrWhiteSpace(value)) // If not null or whitespace then set the UserAgent
+                if (!String.IsNullOrWhiteSpace(value)) // If not null or whitespace then set the UserAgent
                 {
                     _userAgent = value;
                 }
@@ -108,7 +108,7 @@ namespace HTMLValid
                         isConnected = IsOnline(webResponse.StatusCode); // Set the IsOnline property
 
                         // Parsing the source is a better approach, but for some reason the regular expressions were causing an exception
-                        int.TryParse(webResponse.GetResponseHeader("X-W3C-Validator-Errors"), out errors); // Set the number of errors field
+                        Int32.TryParse(webResponse.GetResponseHeader("X-W3C-Validator-Errors"), out errors); // Set the number of errors field
                         switch (webResponse.GetResponseHeader("X-W3C-Validator-Status").ToLower())
                         {
                             case "valid":
@@ -129,7 +129,7 @@ namespace HTMLValid
                         }
                         if (isHtml) // Only returned when validating a HTML file
                         {
-                            int.TryParse(webResponse.GetResponseHeader("X-W3C-Validator-Warnings"), out warnings); // Set the number of warnings field
+                            Int32.TryParse(webResponse.GetResponseHeader("X-W3C-Validator-Warnings"), out warnings); // Set the number of warnings field
                         }
                     }
                 }
