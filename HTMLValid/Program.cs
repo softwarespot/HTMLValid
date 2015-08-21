@@ -58,7 +58,7 @@ namespace HTMLValid
                 "|\t\t\t\t\t\t\t|\n" +
                 "|\t%PROGRAMNAME%\t\t\t\t\t|\n" +
                 "|\t\t\t\t\t\t\t|\n" +
-                "|\tAuthor: SoftwareSpot (C) 2014\t\t\t|\n" +
+                "|\tAuthor: SoftwareSpot (C) 2014-2015\t\t\t|\n" +
                 "|\tBuild: 0.0.0.6\t\t\t\t\t|\n" +
                 "|\t\t\t\t\t\t\t|\n" +
                 "|\tUsage:\t\t\t\t\t\t|\n" +
