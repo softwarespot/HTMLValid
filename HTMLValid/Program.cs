@@ -101,7 +101,7 @@ namespace HTMLValid
                 Exit(EXIT_INVALID_PATH);
             }
 
-            string[] fileList = new string[0]; // Create a new directory array
+            string[] fileList; // Create a new directory array
             if (isDir)
             {
                 fileList = Directory.GetFiles(searchPath, "*.*", SearchOption.AllDirectories);
@@ -114,7 +114,6 @@ namespace HTMLValid
             {
                 string[] tempFileList = { searchPath }; // Workaround for when a single HTML/CSS file is passed to HTMLValid
                 fileList = tempFileList; // Set the directory array to the temporary array
-                tempFileList = null; // Set to null to destroy the temporary array
             }
 
             if (fileList.Length > FILECHECK_THRESHOLD)
@@ -148,13 +147,13 @@ namespace HTMLValid
 
             sbyte exitCode = EXIT_W3C_INVALID; // Set the exit code to the default EXIT_W3C_INVALID, which is zero in this case
             int fileCount = 0, validCount = 0; // Set the file and valid count to zero
-            HTMLValid htmlValid = new HTMLValid(Environment.ExpandEnvironmentVariables("%PROGRAMNAME%")); // Create a HTMLValid object and set the UserAgent
+            HtmlValid htmlValid = new HtmlValid(Environment.ExpandEnvironmentVariables("%PROGRAMNAME%")); // Create a HTMLValid object and set the UserAgent
 
             Stopwatch totalTimer = Stopwatch.StartNew(); // Create a timer object
             foreach (string filePath in fileList) // As the directory array isn't being written to then a foreach() is preferred
             {
-                HTMLValidResults htmlResults = htmlValid.ValidateFilePath(filePath, true); // Returns a HTMLValidResults object
-                if (htmlResults.FileType == HTMLValidFileType.NonSupportedFile) // If the file isn't a HTML or CSS file then skip the file
+                HtmlValidResults htmlResults = htmlValid.ValidateFilePath(filePath, true); // Returns a HTMLValidResults object
+                if (htmlResults.FileType == HtmlValidFileType.NonSupportedFile) // If the file isn't a HTML or CSS file then skip the file
                 {
                     continue;
                 }
@@ -167,7 +166,7 @@ namespace HTMLValid
                     break;
                 }
 
-                validCount += (htmlResults.Status == HTMLValidStatus.Valid ? 1 : 0);
+                validCount += (htmlResults.Status == HtmlValidStatus.Valid ? 1 : 0);
                 fileCount++;
                 if (isErrorsWarningOnly && htmlResults.Errors == 0 && htmlResults.Warnings == 0) // If only display errors and warnings and no errors or warnings found then continue
                 {
@@ -175,7 +174,7 @@ namespace HTMLValid
                 }
 
                 string fileName = PathCompactPathEx(filePath, 15);
-                Console.WriteLine("The {0} file {1} was {2}.", (htmlResults.FileType == HTMLValidFileType.CSS ? "CSS" : "HTML"), fileName, (htmlResults.Status == HTMLValidStatus.Valid ? "Valid" : "Invalid"));
+                Console.WriteLine("The {0} file {1} was {2}.", (htmlResults.FileType == HtmlValidFileType.Css ? "CSS" : "HTML"), fileName, (htmlResults.Status == HtmlValidStatus.Valid ? "Valid" : "Invalid"));
 
                 if (htmlResults.Errors > 0 || htmlResults.Warnings > 0) // Print out the errors and/or warnings
                 {
@@ -196,8 +195,6 @@ namespace HTMLValid
                     Thread.Sleep(1000); // Recommendation by W3C is to sleep for 1 second, though this will only happen if there are 2 or more files
                 }
             }
-
-            htmlValid = null; // Destroy the reference to HTMLValid()
 
             if (exitCode == EXIT_W3C_INVALID) // If equal to zero then no major error occurred during the loop
             {

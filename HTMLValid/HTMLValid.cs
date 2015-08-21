@@ -5,32 +5,32 @@ using System.Text;
 
 namespace HTMLValid
 {
-    public enum HTMLValidFileType : byte
+    public enum HtmlValidFileType : byte
     {
-        CSS,
-        HTML,
-        URL,
+        Css,
+        Html,
+        Url,
         NonSupportedFile
     }
 
-    public enum HTMLValidStatus : byte
+    public enum HtmlValidStatus : byte
     {
         Abort,
         Invalid,
         Valid
     }
 
-    internal struct HTMLValidResults
+    internal struct HtmlValidResults
     {
         public readonly int Errors, Warnings;
 
-        public readonly HTMLValidFileType FileType;
+        public readonly HtmlValidFileType FileType;
 
         public readonly bool IsConnected;
 
-        public readonly HTMLValidStatus Status;
+        public readonly HtmlValidStatus Status;
 
-        public HTMLValidResults(bool isConnected, HTMLValidStatus status, HTMLValidFileType fileType, int errors, int warnings) // Constructor
+        public HtmlValidResults(bool isConnected, HtmlValidStatus status, HtmlValidFileType fileType, int errors, int warnings) // Constructor
         {
             IsConnected = isConnected;
             FileType = fileType;
@@ -40,16 +40,16 @@ namespace HTMLValid
         }
     }
 
-    internal class HTMLValid
+    internal class HtmlValid
     {
         private string _userAgent = string.Empty;
 
-        public HTMLValid()
+        public HtmlValid()
         {
             UserAgent = null;
         }
 
-        public HTMLValid(string userAgent)
+        public HtmlValid(string userAgent)
         {
             UserAgent = userAgent;
         }
@@ -73,30 +73,30 @@ namespace HTMLValid
             }
         }
 
-        public HTMLValidResults ValidateFilePath(string filePath, bool isReportSource)
+        public HtmlValidResults ValidateFilePath(string filePath, bool isReportSource)
         {
             // Values that will later be passed to HTMLValidResults()
             bool isConnected = false;
             int errors = 0, warnings = 0;
-            HTMLValidFileType fileType = HTMLValidFileType.NonSupportedFile;
-            HTMLValidStatus status = HTMLValidStatus.Abort;
+            HtmlValidFileType fileType = HtmlValidFileType.NonSupportedFile;
+            HtmlValidStatus status = HtmlValidStatus.Abort;
 
-            bool isCSS = IsCSSFile(filePath), isHTML = IsHTMLFile(filePath);
-            if (isCSS || isHTML)
+            bool isCss = IsCSSFile(filePath), isHtml = IsHTMLFile(filePath);
+            if (isCss || isHtml)
             {
                 string fileParams = File.ReadAllText(filePath, Encoding.UTF8); // Read the file using UTF8 encoding
                 fileParams = Uri.EscapeDataString(fileParams); // Encode the file data by escaping certain characters
 
                 HttpWebResponse webResponse;
-                if (isCSS)
+                if (isCss)
                 {
-                    fileType = HTMLValidFileType.CSS;
+                    fileType = HtmlValidFileType.Css;
                     fileParams = "?text=" + fileParams + (isReportSource ? "&ss=1" : "");
                     webResponse = HttpGet(@"http://jigsaw.w3.org/css-validator/validator", fileParams);
                 }
                 else
                 {
-                    fileType = HTMLValidFileType.HTML;
+                    fileType = HtmlValidFileType.Html;
                     fileParams = "uploaded_file=" + fileParams + (isReportSource ? "&output=text" : "");
                     webResponse = HttpPost(@"http://validator.w3.org/check", fileParams);
                 }
@@ -112,29 +112,29 @@ namespace HTMLValid
                         switch (webResponse.GetResponseHeader("X-W3C-Validator-Status").ToLower())
                         {
                             case "valid":
-                                status = HTMLValidStatus.Valid;
+                                status = HtmlValidStatus.Valid;
                                 break;
 
                             case "invalid":
-                                status = HTMLValidStatus.Invalid;
+                                status = HtmlValidStatus.Invalid;
                                 break;
 
                             case "abort":
-                                status = HTMLValidStatus.Abort;
+                                status = HtmlValidStatus.Abort;
                                 break;
 
                             default:
-                                status = HTMLValidStatus.Abort;
+                                status = HtmlValidStatus.Abort;
                                 break;
                         }
-                        if (isHTML) // Only returned when validating a HTML file
+                        if (isHtml) // Only returned when validating a HTML file
                         {
                             int.TryParse(webResponse.GetResponseHeader("X-W3C-Validator-Warnings"), out warnings); // Set the number of warnings field
                         }
                     }
                 }
             }
-            return new HTMLValidResults(isConnected, status, fileType, errors, warnings);
+            return new HtmlValidResults(isConnected, status, fileType, errors, warnings);
         }
 
         private HttpWebResponse HttpGet(string url, string parameters)
@@ -147,7 +147,10 @@ namespace HTMLValid
                 webRequest.UserAgent = UserAgent;
                 webResponse = (HttpWebResponse)webRequest.GetResponse();
             }
-            catch { }
+            catch
+            {
+                // Ignored
+            }
             return webResponse;
         }
 
@@ -170,7 +173,10 @@ namespace HTMLValid
                 }
                 webResponse = (HttpWebResponse)webRequest.GetResponse(); // Get the response from the server
             }
-            catch { }
+            catch
+            {
+                // Ignored
+            }
             return webResponse;
         }
 
@@ -198,27 +204,28 @@ namespace HTMLValid
             return false;
         }
 
-        private bool IsURL(string url)
+        private bool IsUrl(string url)
         {
             Uri urlResult;
             return Uri.TryCreate(url, UriKind.Absolute, out urlResult) && urlResult.Scheme == Uri.UriSchemeHttp;
         }
 
-        private HTMLValidResults ValidateURL(string urlPath, bool isReportSource) // Currently not implemented
+        private HtmlValidResults ValidateUrl(string urlPath, bool isReportSource) // Currently not implemented
         {
             // Values that will later be passed to HTMLValidResults()
-            bool isConnected = false;
-            int errors = 0, warnings = 0;
-            HTMLValidFileType fileType = HTMLValidFileType.NonSupportedFile;
-            HTMLValidStatus status = HTMLValidStatus.Abort;
+            const bool isConnected = false;
+            const int errors = 0;
+            const int warnings = 0;
+            HtmlValidFileType fileType = HtmlValidFileType.NonSupportedFile;
+            const HtmlValidStatus status = HtmlValidStatus.Abort;
 
-            if (IsURL(urlPath))
+            if (IsUrl(urlPath))
             {
-                fileType = HTMLValidFileType.URL;
+                fileType = HtmlValidFileType.Url;
                 string fileData = "uri=" + Uri.EscapeUriString(urlPath); // Escape the URL
             }
 
-            return new HTMLValidResults(isConnected, status, fileType, errors, warnings);
+            return new HtmlValidResults(isConnected, status, fileType, errors, warnings);
         }
     }
 }
