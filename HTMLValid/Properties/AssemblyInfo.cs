@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Resources;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -10,7 +11,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("SoftwareSpot")]
 [assembly: AssemblyProduct("HTMLValid")]
-[assembly: AssemblyCopyright("SoftwareSpot ©  2014")]
+[assembly: AssemblyCopyright("SoftwareSpot ©  2014-2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -34,3 +35,4 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("0.0.0.6")]
 [assembly: AssemblyFileVersion("0.0.0.6")]
+[assembly: NeutralResourcesLanguageAttribute("en")]
