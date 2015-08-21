@@ -11,7 +11,7 @@ namespace HTMLValid
     {
         private static void Exit(sbyte errorCode)
         {
-            Console.WriteLine(); // Empty line.
+            Console.WriteLine(); // Empty line
             Console.Write("Press any key to continue . . .");
             Console.ReadKey(true);
             Environment.Exit(errorCode);
@@ -25,13 +25,13 @@ namespace HTMLValid
                 if (File.Exists(commandline))
                 {
                     filePath = commandline;
-                    ret = true; // A search path was found.
+                    ret = true; // A search path was found
                     continue;
                 }
 
                 if (commandline.ToLower() == "-allfiles")
                 {
-                    isErrorsWarningOnly = !isErrorsWarningOnly; // Opposite of what was passed.
+                    isErrorsWarningOnly = !isErrorsWarningOnly; // Opposite of what was passed
                 }
             }
             return ret;
@@ -49,7 +49,7 @@ namespace HTMLValid
 
         private static void Main(string[] commandlineArgs)
         {
-            // Set the enironment variables for the application.
+            // Set the enironment variables for the application
             Environment.SetEnvironmentVariable("PROGRAMNAME", "HTMLValid");
             Environment.SetEnvironmentVariable("FILEVERSION", "0.0.0.5");
 
@@ -69,22 +69,22 @@ namespace HTMLValid
                 "=========================================================\n"));
 
             /* Error codes:
-             * 0 - Valid HTML/CSS file.
-             * 1 - Invalid HTML/CSS file.
+             * 0 - Valid HTML/CSS file
+             * 1 - Invalid HTML/CSS file
              *
-             * -1 - No file/directory was passed or the directory was empty.
-             * -2 - File/directory invalid.
-             * -3 - Unable to connect to the W3C Validator.
-             * -4 - User cancelled the operation.
+             * -1 - No file/directory was passed or the directory was empty
+             * -2 - File/directory invalid
+             * -3 - Unable to connect to the W3C Validator
+             * -4 - User cancelled the operation
              */
 
-            // Constants for the exit message.
+            // Constants for the exit message
             const sbyte EXIT_USER_CLOSE = -4, EXIT_W3C_CONNECTION = -3, EXIT_INVALID_PATH = -2, EXIT_EMPTY_PATH = -1, EXIT_W3C_INVALID = 0, EXIT_W3C_VALID = 1;
             const byte FILECHECK_THRESHOLD = 5;
 
-            bool isErrorsWarningOnly = true; // Display only files with errors or warnings.
+            bool isErrorsWarningOnly = true; // Display only files with errors or warnings
             string searchPath = string.Empty;
-            if (GetCommandLineArgs(commandlineArgs, ref searchPath, ref isErrorsWarningOnly)) // Set the filePath as the one sent to the application as a commandline parameter.
+            if (GetCommandLineArgs(commandlineArgs, ref searchPath, ref isErrorsWarningOnly)) // Set the filePath as the one sent to the application as a commandline parameter
             {
                 searchPath = commandlineArgs[0];
             }
@@ -101,20 +101,20 @@ namespace HTMLValid
                 Exit(EXIT_INVALID_PATH);
             }
 
-            string[] fileList = new string[0]; // Create a new directory array.
+            string[] fileList = new string[0]; // Create a new directory array
             if (isDir)
             {
                 fileList = Directory.GetFiles(searchPath, "*.*", SearchOption.AllDirectories);
-                if (fileList.Length == 0) // If no files were found then exit with the exit code of EXIT_EMPTY_PATH.
+                if (fileList.Length == 0) // If no files were found then exit with the exit code of EXIT_EMPTY_PATH
                 {
                     Exit(EXIT_EMPTY_PATH);
                 }
             }
-            else // Otherwise it's a file as a check was done before to check if the file path was either a directory or file.
+            else // Otherwise it's a file as a check was done before to check if the file path was either a directory or file
             {
-                string[] tempFileList = { searchPath }; // Workaround for when a single HTML/CSS file is passed to HTMLValid.
-                fileList = tempFileList; // Set the directory array to the temporary array.
-                tempFileList = null; // Set to null to destroy the temporary array.
+                string[] tempFileList = { searchPath }; // Workaround for when a single HTML/CSS file is passed to HTMLValid
+                fileList = tempFileList; // Set the directory array to the temporary array
+                tempFileList = null; // Set to null to destroy the temporary array
             }
 
             if (fileList.Length > FILECHECK_THRESHOLD)
@@ -128,38 +128,38 @@ namespace HTMLValid
 
                 string userChoice = string.Empty;
                 byte failCount = 0;
-                while (userChoice != "y" && userChoice != "n") // Continue to loop until y or n is entered.
+                while (userChoice != "y" && userChoice != "n") // Continue to loop until y or n is entered
                 {
-                    if (failCount > 0) // If the fail count is greater than zero then display a warning as to what is to be entered.
+                    if (failCount > 0) // If the fail count is greater than zero then display a warning as to what is to be entered
                     {
-                        Console.WriteLine(); // Empty line.
+                        Console.WriteLine(); // Empty line
                         Console.Write("Please enter either Y or N: ");
                     }
-                    userChoice = Console.ReadKey(true).KeyChar.ToString(CultureInfo.InvariantCulture).ToLower(); // Get the char and convert to string and lowercase.
+                    userChoice = Console.ReadKey(true).KeyChar.ToString(CultureInfo.InvariantCulture).ToLower(); // Get the char and convert to string and lowercase
                     failCount++;
                 }
                 if (userChoice == "n")
                     Exit(EXIT_USER_CLOSE);
             }
 
-            Console.WriteLine(); // Empty line.
+            Console.WriteLine(); // Empty line
             Console.WriteLine("Validating . . .");
-            Console.WriteLine(); // Empty line.
+            Console.WriteLine(); // Empty line
 
-            sbyte exitCode = EXIT_W3C_INVALID; // Set the exit code to the default EXIT_W3C_INVALID, which is zero in this case.
-            int fileCount = 0, validCount = 0; // Set the file and valid count to zero.
-            HTMLValid htmlValid = new HTMLValid(Environment.ExpandEnvironmentVariables("%PROGRAMNAME%")); // Create a HTMLValid object and set the UserAgent.
+            sbyte exitCode = EXIT_W3C_INVALID; // Set the exit code to the default EXIT_W3C_INVALID, which is zero in this case
+            int fileCount = 0, validCount = 0; // Set the file and valid count to zero
+            HTMLValid htmlValid = new HTMLValid(Environment.ExpandEnvironmentVariables("%PROGRAMNAME%")); // Create a HTMLValid object and set the UserAgent
 
-            Stopwatch totalTimer = Stopwatch.StartNew(); // Create a timer object.
-            foreach (string filePath in fileList) // As the directory array isn't being written to then a foreach() is preferred.
+            Stopwatch totalTimer = Stopwatch.StartNew(); // Create a timer object
+            foreach (string filePath in fileList) // As the directory array isn't being written to then a foreach() is preferred
             {
-                HTMLValidResults htmlResults = htmlValid.ValidateFilePath(filePath, true); // Returns a HTMLValidResults object.
-                if (htmlResults.FileType == HTMLValidFileType.NonSupportedFile) // If the file isn't a HTML or CSS file then skip the file.
+                HTMLValidResults htmlResults = htmlValid.ValidateFilePath(filePath, true); // Returns a HTMLValidResults object
+                if (htmlResults.FileType == HTMLValidFileType.NonSupportedFile) // If the file isn't a HTML or CSS file then skip the file
                 {
                     continue;
                 }
 
-                if (!htmlResults.IsConnected) // An error occurred with connecting to W3C so break from the loop.
+                if (!htmlResults.IsConnected) // An error occurred with connecting to W3C so break from the loop
                 {
                     Console.WriteLine("An error occurred connecting to W3C's validation service.\n" +
                         "Please try again or contact your local administrator.");
@@ -169,7 +169,7 @@ namespace HTMLValid
 
                 validCount += (htmlResults.Status == HTMLValidStatus.Valid ? 1 : 0);
                 fileCount++;
-                if (isErrorsWarningOnly && htmlResults.Errors == 0 && htmlResults.Warnings == 0) // If only display errors and warnings and no errors or warnings found then continue.
+                if (isErrorsWarningOnly && htmlResults.Errors == 0 && htmlResults.Warnings == 0) // If only display errors and warnings and no errors or warnings found then continue
                 {
                     continue;
                 }
@@ -177,7 +177,7 @@ namespace HTMLValid
                 string fileName = PathCompactPathEx(filePath, 15);
                 Console.WriteLine("The {0} file {1} was {2}.", (htmlResults.FileType == HTMLValidFileType.CSS ? "CSS" : "HTML"), fileName, (htmlResults.Status == HTMLValidStatus.Valid ? "Valid" : "Invalid"));
 
-                if (htmlResults.Errors > 0 || htmlResults.Warnings > 0) // Print out the errors and/or warnings.
+                if (htmlResults.Errors > 0 || htmlResults.Warnings > 0) // Print out the errors and/or warnings
                 {
                     Console.WriteLine("! It appears there are additional issues that should be addressed: ");
                     if (htmlResults.Errors > 0)
@@ -189,20 +189,20 @@ namespace HTMLValid
                         Console.WriteLine("Warnings: {0}", htmlResults.Warnings);
                     }
                 }
-                Console.WriteLine(); // Empty line.
+                Console.WriteLine(); // Empty line
 
                 if (fileList.Length >= 2)
                 {
-                    Thread.Sleep(1000); // Recommendation by W3C is to sleep for 1 second, though this will only happen if there are 2 or more files.
+                    Thread.Sleep(1000); // Recommendation by W3C is to sleep for 1 second, though this will only happen if there are 2 or more files
                 }
             }
 
-            htmlValid = null; // Destroy the reference to HTMLValid().
+            htmlValid = null; // Destroy the reference to HTMLValid()
 
-            if (exitCode == EXIT_W3C_INVALID) // If equal to zero then no major error occurred during the loop.
+            if (exitCode == EXIT_W3C_INVALID) // If equal to zero then no major error occurred during the loop
             {
-                exitCode = (validCount == fileList.Length ? EXIT_W3C_VALID : EXIT_W3C_INVALID); // If all files were valid then set the exit code to EXIT_VALID_HTML.
-                int seconds = (int)totalTimer.ElapsedMilliseconds / 1000; // Get the total number of elapsed seconds and cast as an integer.
+                exitCode = (validCount == fileList.Length ? EXIT_W3C_VALID : EXIT_W3C_INVALID); // If all files were valid then set the exit code to EXIT_VALID_HTML
+                int seconds = (int)totalTimer.ElapsedMilliseconds / 1000; // Get the total number of elapsed seconds and cast as an integer
                 Console.WriteLine("Created: {0}\n" +
                     "Files: {1}\n" +
                     "Valid: {2}\n" +
@@ -215,7 +215,7 @@ namespace HTMLValid
         {
             if (!string.IsNullOrEmpty(filePath) && (filePath.Length - Path.GetFileName(filePath).Length) > length)
             {
-                filePath = Regex.Replace(filePath, @"^(.{" + length + @"}).+?([^\\]+)$", @"$1...\$2"); // Shorten the path but still retaining the file name length.
+                filePath = Regex.Replace(filePath, @"^(.{" + length + @"}).+?([^\\]+)$", @"$1...\$2"); // Shorten the path but still retaining the file name length
             }
             return filePath;
         }
