@@ -138,7 +138,9 @@ namespace HTMLValid
                     failCount++;
                 }
                 if (userChoice == "n")
+                {
                     Exit(EXIT_USER_CLOSE);
+                }
             }
 
             Console.WriteLine(); // Empty line
@@ -199,7 +201,7 @@ namespace HTMLValid
             if (exitCode == EXIT_W3C_INVALID) // If equal to zero then no major error occurred during the loop
             {
                 exitCode = (validCount == fileList.Length ? EXIT_W3C_VALID : EXIT_W3C_INVALID); // If all files were valid then set the exit code to EXIT_VALID_HTML
-                int seconds = (int)totalTimer.ElapsedMilliseconds / 1000; // Get the total number of elapsed seconds and cast as an integer
+                int seconds = (int) totalTimer.ElapsedMilliseconds / 1000; // Get the total number of elapsed seconds and cast as an integer
                 Console.WriteLine("Created: {0}\n" +
                     "Files: {1}\n" +
                     "Valid: {2}\n" +

@@ -142,10 +142,10 @@ namespace HTMLValid
             HttpWebResponse webResponse = null;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(url + parameters);
+                HttpWebRequest webRequest = (HttpWebRequest) WebRequest.Create(url + parameters);
                 webRequest.Method = "GET";
                 webRequest.UserAgent = UserAgent;
-                webResponse = (HttpWebResponse)webRequest.GetResponse();
+                webResponse = (HttpWebResponse) webRequest.GetResponse();
             }
             catch
             {
@@ -159,7 +159,7 @@ namespace HTMLValid
             HttpWebResponse webResponse = null;
             try
             {
-                HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(url);
+                HttpWebRequest webRequest = (HttpWebRequest) WebRequest.Create(url);
                 webRequest.ContentType = "application/x-www-form-urlencoded";
                 webRequest.Method = "POST";
                 webRequest.UserAgent = UserAgent;
@@ -171,7 +171,7 @@ namespace HTMLValid
                 {
                     webStream.Write(postData, 0, postData.Length);
                 }
-                webResponse = (HttpWebResponse)webRequest.GetResponse(); // Get the response from the server
+                webResponse = (HttpWebResponse) webRequest.GetResponse(); // Get the response from the server
             }
             catch
             {
