@@ -44,16 +44,6 @@ namespace HTMLValid
     {
         private string _userAgent = String.Empty;
 
-        public HtmlValid()
-        {
-            UserAgent = null;
-        }
-
-        public HtmlValid(string userAgent)
-        {
-            UserAgent = userAgent;
-        }
-
         public string UserAgent
         {
             get
@@ -71,6 +61,16 @@ namespace HTMLValid
                     _userAgent = "HTMLValid";
                 }
             }
+        }
+
+        public HtmlValid()
+        {
+            UserAgent = null;
+        }
+
+        public HtmlValid(string userAgent)
+        {
+            UserAgent = userAgent;
         }
 
         public HtmlValidResults ValidateFilePath(string filePath, bool isReportSource)
