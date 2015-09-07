@@ -100,7 +100,7 @@ namespace HTMLValid
                 "|\t%PROGRAMNAME%.exe \"HTMLFile/Folder\" < -allfiles >\t|\n" +
                 "|\t\t\t\t\t\t\t|\n" +
                 "|\t<optional> --allfiles|--af: Display all files\t|\n" +
-                "|\t<optional> --help|--h: Additional help\t|\n" +
+                "|\t<optional> --help|--h: Additional help\t|\t\n" +
                 "|\t<optional> --version|--v: Version number\t|\n" +
                 "|\t\t\t\t\t\t\t|\n" +
                 "=========================================================\n")
