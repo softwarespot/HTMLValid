@@ -93,14 +93,14 @@ namespace HTMLValid
                 "|\t\t\t\t\t\t\t|\n" +
                 "|\t%PROGRAMNAME%\t\t\t\t\t|\n" +
                 "|\t\t\t\t\t\t\t|\n" +
-                "|\tAuthor: SoftwareSpot (C) 2014-2015\t\t\t|\n" +
+                "|\tAuthor: SoftwareSpot (C) 2014-2015\t\t|\n" +
                 "|\tBuild: %FILEVERSION%\t\t\t\t\t|\n" +
                 "|\t\t\t\t\t\t\t|\n" +
                 "|\tUsage:\t\t\t\t\t\t|\n" +
                 "|\t%PROGRAMNAME%.exe \"HTMLFile/Folder\" < -allfiles >\t|\n" +
                 "|\t\t\t\t\t\t\t|\n" +
                 "|\t<optional> --allfiles|--af: Display all files\t|\n" +
-                "|\t<optional> --help|--h: Additional help\t|\t\n" +
+                "|\t<optional> --help|--h: Additional help\t\t|\n" +
                 "|\t<optional> --version|--v: Version number\t|\n" +
                 "|\t\t\t\t\t\t\t|\n" +
                 "=========================================================\n")
