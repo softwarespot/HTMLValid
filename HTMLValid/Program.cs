@@ -79,7 +79,7 @@ namespace HTMLValid
              */
 
             // Constants for the exit message
-            const sbyte EXIT_USER_CLOSE = -4, EXIT_W3C_CONNECTION = -3, EXIT_INVALID_PATH = -2, EXIT_EMPTY_PATH = -1, EXIT_W3C_INVALID = 0, EXIT_W3C_VALID = 1;
+            const sbyte EXIT_USER_CLOSE = -4, EXIT_W3C_CONNECTION = -3, EXIT_INVALID_PATH = -2, EXIT_EMPTY_PATH = -1, EXIT_W3C_INVALID = 1, EXIT_W3C_VALID = 0;
             const byte FILECHECK_THRESHOLD = 5;
 
             bool isErrorsWarningOnly = true; // Display only files with errors or warnings
