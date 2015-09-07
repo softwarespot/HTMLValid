@@ -13,11 +13,16 @@ namespace HTMLValid
         ///     Write to the console and set the exit code
         /// </summary>
         /// <param name="errorCode"></param>
-        private static void Exit(ExitCode errorCode = ExitCode.None)
+        /// <param name="wait">Pause for user input</param>
+        private static void Exit(ExitCode errorCode, bool wait)
         {
             Console.WriteLine();
-            // Console.Write("Press any key to continue . . .");
-            // Console.ReadKey(true);
+            if (wait)
+            {
+                Console.Write("Press any key to continue . . .");
+                Console.ReadKey(true);
+            }
+
             Environment.Exit((sbyte)errorCode);
         }
 
@@ -62,7 +67,7 @@ namespace HTMLValid
                         Console.WriteLine("See the README for additional help");
 
                         // Exit the application
-                        Exit();
+                        Exit(ExitCode.None, false);
                         break;
 
                     case "version":
@@ -70,7 +75,7 @@ namespace HTMLValid
                         Console.WriteLine(Environment.ExpandEnvironmentVariables("v%FILEVERSION%"));
 
                         // Exit the application
-                        Exit();
+                        Exit(ExitCode.None, false);
                         break;
                 }
             }
@@ -153,7 +158,7 @@ namespace HTMLValid
             {
                 DisplayHeader();
                 Console.WriteLine(Environment.ExpandEnvironmentVariables("Please pass a valid HTML/CSS file or directory to %PROGRAMNAME%."));
-                Exit(ExitCode.EmptyPath);
+                Exit(ExitCode.EmptyPath, true);
             }
 
             DisplayHeader();
@@ -162,7 +167,7 @@ namespace HTMLValid
             if (!isDir && !IsFile(searchPath))
             {
                 Console.WriteLine(Environment.ExpandEnvironmentVariables("Please pass a valid HTML/CSS file or directory to %PROGRAMNAME%."));
-                Exit(ExitCode.InvalidPath);
+                Exit(ExitCode.InvalidPath, true);
             }
 
             // Create a new directory array
@@ -173,7 +178,7 @@ namespace HTMLValid
                 // If no files were found then exit with the empty path exit code
                 if (filePaths.Length == 0)
                 {
-                    Exit(ExitCode.EmptyPath);
+                    Exit(ExitCode.EmptyPath, true);
                 }
             }
             else
@@ -217,7 +222,7 @@ namespace HTMLValid
                 }
                 if (userChoice == "n")
                 {
-                    Exit(ExitCode.UserClose);
+                    Exit(ExitCode.UserClose, true);
                 }
             }
 
@@ -307,7 +312,7 @@ namespace HTMLValid
                     DateTime.Now, fileCount, validCount, seconds, (seconds == 1 ? "" : "s"), Environment.NewLine);
             }
 
-            Exit(exitCode);
+            Exit(exitCode, true);
         }
 
         /// <summary>
