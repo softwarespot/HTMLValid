@@ -9,6 +9,10 @@ namespace HTMLValid
 {
     class Program
     {
+        /// <summary>
+        ///     Write to the console and set the exit code
+        /// </summary>
+        /// <param name="errorCode"></param>
         private static void Exit(ExitCode errorCode)
         {
             Console.WriteLine();
@@ -17,37 +21,60 @@ namespace HTMLValid
             Environment.Exit((sbyte) errorCode);
         }
 
+        /// <summary>
+        ///     Parse commandline arguments
+        /// </summary>
+        /// <param name="commandlineArgs">Array of commandline arguments</param>
+        /// <param name="filePath">Filepath variable reference</param>
+        /// <param name="isErrorsWarningOnly">Display warnings only variable reference</param>
+        /// <returns>True a filepath was found; otherwise, false</returns>
         private static bool GetCommandLineArgs(string[] commandlineArgs, ref string filePath, ref bool isErrorsWarningOnly)
         {
             bool @return = false;
-            foreach (string commandline in commandlineArgs)
+            foreach (string commandlineArg in commandlineArgs)
             {
-                if (File.Exists(commandline))
+                if (File.Exists(commandlineArg))
                 {
-                    filePath = commandline;
-                    @return = true; // A search path was found
+                    filePath = commandlineArg;
+                    // A search path was found
+                    @return = true;
                     continue;
                 }
 
-                if (commandline.ToLower() == "-allfiles")
+                if (commandlineArg.ToLower() == "-allfiles")
                 {
-                    isErrorsWarningOnly = !isErrorsWarningOnly; // Opposite of what was passed
+                    // Opposite of what was passed
+                    isErrorsWarningOnly = !isErrorsWarningOnly;
                 }
             }
 
             return @return;
         }
 
+        /// <summary>
+        ///     Check if a filepath is a directory
+        /// </summary>
+        /// <param name="filePath">Filepath to check</param>
+        /// <returns>True is a directory; otherwise, false</returns>
         private static bool IsDir(string filePath)
         {
             return Directory.Exists(filePath) && !File.Exists(filePath);
         }
 
+        /// <summary>
+        ///     Check if a filepath is a file
+        /// </summary>
+        /// <param name="filePath">Filepath to check</param>
+        /// <returns>True is a file; otherwise, false</returns>
         private static bool IsFile(string filePath)
         {
             return File.Exists(filePath) && !Directory.Exists(filePath);
         }
 
+        /// <summary>
+        ///     Main entry point
+        /// </summary>
+        /// <param name="commandlineArgs">Commandline arguments passed to the executable</param>
         private static void Main(string[] commandlineArgs)
         {
             // Set the enironment variables for the application
@@ -81,13 +108,12 @@ namespace HTMLValid
 
             const byte filecheckThreshold = 5;
 
-            bool isErrorsWarningOnly = true; // Display only files with errors or warnings
+            // Display only files with errors or warnings
+            bool isErrorsWarningOnly = true;
             string searchPath = String.Empty;
-            if (GetCommandLineArgs(commandlineArgs, ref searchPath, ref isErrorsWarningOnly)) // Set the filePath as the one sent to the application as a commandline parameter
-            {
-                searchPath = commandlineArgs[0];
-            }
-            else
+
+            // If a filepath was not found in the commandline arguments, the return with a empty path exit code
+            if (!GetCommandLineArgs(commandlineArgs, ref searchPath, ref isErrorsWarningOnly))
             {
                 Console.WriteLine(Environment.ExpandEnvironmentVariables("Please pass a valid HTML/CSS file or directory to %PROGRAMNAME%."));
                 Exit(ExitCode.EmptyPath);
@@ -100,40 +126,49 @@ namespace HTMLValid
                 Exit(ExitCode.InvalidPath);
             }
 
-            string[] fileList; // Create a new directory array
+            // Create a new directory array
+            string[] fileList;
             if (isDir)
             {
                 fileList = Directory.GetFiles(searchPath, "*.*", SearchOption.AllDirectories);
-                if (fileList.Length == 0) // If no files were found then exit with the exit code of EXIT_EMPTY_PATH
+                // If no files were found then exit with the empty path exit code
+                if (fileList.Length == 0)
                 {
                     Exit(ExitCode.EmptyPath);
                 }
             }
             else // Otherwise it's a file as a check was done before to check if the file path was either a directory or file
             {
-                string[] tempFileList = { searchPath }; // Workaround for when a single HTML/CSS file is passed to HTMLValid
-                fileList = tempFileList; // Set the directory array to the temporary array
+                // Workaround for when a single HTML/CSS file is passed to HTMLValid
+                string[] tempFileList = { searchPath };
+
+                // Set the directory array to the temporary array
+                fileList = tempFileList;
             }
 
             if (fileList.Length > filecheckThreshold)
             {
                 Console.WriteLine("The directory contains more than {0} files and could take anywhere between " +
-                    "{1} second{2} to complete.\n" +
-                    "\n" +
-                    "This is a FREE service and thus W3C recommends a one second waiting period between uploads.\n" +
-                    "\n" +
-                    "Would you like to continue processing? (Y or N)", filecheckThreshold, fileList.Length, (fileList.Length > 1 ? "s" : ""));
+                    "{1} second{2} to complete.{3}" +
+                    "{3}" +
+                    "This is a FREE service and thus W3C recommends a one second waiting period between uploads.{3}" +
+                    "{3}" +
+                    "Would you like to continue processing? (Y or N)", filecheckThreshold, fileList.Length, (fileList.Length > 1 ? "s" : ""), Environment.NewLine);
 
                 string userChoice = String.Empty;
                 byte failCount = 0;
-                while (userChoice != "y" && userChoice != "n") // Continue to loop until y or n is entered
+
+                // Continue to loop until y or n is entered
+                while (userChoice != "y" && userChoice != "n")
                 {
-                    if (failCount > 0) // If the fail count is greater than zero then display a warning as to what is to be entered
+                    // If the fail count is greater than zero then display a warning as to what is to be entered
+                    if (failCount > 0)
                     {
                         Console.WriteLine();
                         Console.Write("Please enter either Y or N: ");
                     }
-                    userChoice = Console.ReadKey(true).KeyChar.ToString(CultureInfo.InvariantCulture).ToLower(); // Get the char and convert to string and lowercase
+                    // Get the char and convert to string and lowercase
+                    userChoice = Console.ReadKey(true).KeyChar.ToString(CultureInfo.InvariantCulture).ToLower();
                     failCount++;
                 }
                 if (userChoice == "n")
@@ -147,37 +182,53 @@ namespace HTMLValid
             Console.WriteLine();
 
             ExitCode exitCode = ExitCode.W3CValid;
-            int fileCount = 0, validCount = 0; // Set the file and valid count to zero
-            HtmlValid htmlValid = new HtmlValid(Environment.ExpandEnvironmentVariables("%PROGRAMNAME%")); // Create a HTMLValid object and set the UserAgent
 
-            Stopwatch totalTimer = Stopwatch.StartNew(); // Create a timer object
-            foreach (string filePath in fileList) // As the directory array isn't being written to then a foreach() is preferred
+            // Set the file and valid count to zero
+            int fileCount = 0;
+            int validCount = 0;
+
+            // Create a HTMLValid object and set the user agent string
+            HtmlValid htmlValid = new HtmlValid(Environment.ExpandEnvironmentVariables("%PROGRAMNAME%"));
+
+            // Create a timer object
+            Stopwatch totalTimer = Stopwatch.StartNew();
+
+            // As the directory array isn't being written to then a foreach() is preferred
+            foreach (string filePath in fileList)
             {
-                HtmlValidResults htmlResults = htmlValid.ValidateFilePath(filePath, true); // Returns a HTMLValidResults object
-                if (htmlResults.FileType == HtmlValidFileType.NonSupportedFile) // If the file isn't a HTML or CSS file then skip the file
+                // Returns a HTMLValidResults structure
+                HtmlValidResults htmlResults = htmlValid.ValidateFilePath(filePath, true);
+
+                // If the file isn't a HTML or CSS file then skip the file
+                if (htmlResults.FileType == HtmlValidFileType.NonSupportedFile)
                 {
                     continue;
                 }
 
-                if (!htmlResults.IsConnected) // An error occurred with connecting to W3C so break from the loop
+                // An error occurred with connecting to W3C so break from the loop
+                if (!htmlResults.IsConnected)
                 {
-                    Console.WriteLine("An error occurred connecting to W3C's validation service.\n" +
-                        "Please try again or contact your local administrator.");
+                    Console.WriteLine("An error occurred connecting to W3C's validation service.{0}Please try again or contact your local administrator.",
+                        Environment.NewLine);
                     exitCode = ExitCode.W3CConnection;
                     break;
                 }
 
                 validCount += (htmlResults.Status == HtmlValidStatus.Valid ? 1 : 0);
                 fileCount++;
-                if (isErrorsWarningOnly && htmlResults.Errors == 0 && htmlResults.Warnings == 0) // If only display errors and warnings and no errors or warnings found then continue
+
+                // If only display errors and warnings and no errors or warnings found then continue
+                if (isErrorsWarningOnly && htmlResults.Errors == 0 && htmlResults.Warnings == 0)
                 {
                     continue;
                 }
 
                 string fileName = PathCompactPathEx(filePath, 15);
-                Console.WriteLine("The {0} file {1} was {2}.", (htmlResults.FileType == HtmlValidFileType.Css ? "CSS" : "HTML"), fileName, (htmlResults.Status == HtmlValidStatus.Valid ? "Valid" : "Invalid"));
+                Console.WriteLine("The {0} file {1} was {2}.",
+                    (htmlResults.FileType == HtmlValidFileType.Css ? "CSS" : "HTML"), fileName, (htmlResults.Status == HtmlValidStatus.Valid ? "Valid" : "Invalid"));
 
-                if (htmlResults.Errors > 0 || htmlResults.Warnings > 0) // Print out the errors and/or warnings
+                // Print out the errors and/or warnings
+                if (htmlResults.Errors > 0 || htmlResults.Warnings > 0)
                 {
                     Console.WriteLine("! It appears there are additional issues that should be addressed: ");
                     if (htmlResults.Errors > 0)
@@ -193,29 +244,40 @@ namespace HTMLValid
 
                 if (fileList.Length >= 2)
                 {
-                    Thread.Sleep(1000); // Recommendation by W3C is to sleep for 1 second, though this will only happen if there are 2 or more files
+                    // Recommendation by W3C is to sleep for 1 second, though this will only happen if there are 2 or more files
+                    Thread.Sleep(1000);
                 }
             }
 
-            if (exitCode == ExitCode.W3CValid) // If equal to zero then no major error occurred during the loop
+            // If equal to zero then no major error occurred during the loop
+            if (exitCode == ExitCode.W3CValid)
             {
-                exitCode = (validCount == fileList.Length ? ExitCode.W3CValid : ExitCode.W3CInvalid); // If all files were valid then set the exit code to EXIT_VALID_HTML
-                int seconds = (int) totalTimer.ElapsedMilliseconds / 1000; // Get the total number of elapsed seconds and cast as an integer
-                Console.WriteLine("Created: {0}\n" +
-                    "Files: {1}\n" +
-                    "Valid: {2}\n" +
-                    "Running: {3} second{4}.", 
-                    DateTime.Now, fileCount, validCount, seconds, (seconds == 1 ? "" : "s"));
+                // If all files were valid then set the exit code to a valid filepath
+                exitCode = (validCount == fileList.Length ? ExitCode.W3CValid : ExitCode.W3CInvalid);
+
+                // Get the total number of elapsed seconds and cast as an integer
+                int seconds = (int) totalTimer.ElapsedMilliseconds / 1000;
+                Console.WriteLine("Created: {0}{5}Files: {1}{5}Valid: {2}{5}Running: {3} second{4}.",
+                    DateTime.Now, fileCount, validCount, seconds, (seconds == 1 ? "" : "s"), Environment.NewLine);
             }
+
             Exit(exitCode);
         }
 
+        /// <summary>
+        ///     Compact a filepath by replacing with ellipses
+        /// </summary>
+        /// <param name="filePath">Filepath to compact</param>
+        /// <param name="length">Total length of the filepath</param>
+        /// <returns>Compacted filepath string; otherwise, original string</returns>
         private static string PathCompactPathEx(string filePath, int length = 25)
         {
             if (!String.IsNullOrEmpty(filePath) && (filePath.Length - Path.GetFileName(filePath).Length) > length)
             {
-                filePath = Regex.Replace(filePath, @"^(.{" + length + @"}).+?([^\\]+)$", @"$1...\$2"); // Shorten the path but still retaining the file name length
+                // Shorten the path but still retaining the file name length
+                filePath = Regex.Replace(filePath, @"^(.{" + length + @"}).+?([^\\]+)$", @"$1...\$2");
             }
+
             return filePath;
         }
     }

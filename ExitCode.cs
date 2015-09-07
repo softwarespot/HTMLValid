@@ -1,5 +1,8 @@
 ﻿namespace HTMLValid
 {
+    /// <summary>
+    ///     Exit codes used to determine the type of error occurred
+    /// </summary>
     public enum ExitCode : sbyte
     {
         UserClose = -4,
