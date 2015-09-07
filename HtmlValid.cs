@@ -9,7 +9,7 @@ namespace HTMLValid
     /// <summary>
     ///     HTMLValid class
     /// </summary>
-    internal class HtmlValid
+    class HtmlValid
     {
         /// <summary>
         ///     Private variable to hold the user agent string

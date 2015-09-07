@@ -5,6 +5,7 @@
     /// </summary>
     public enum ExitCode : sbyte
     {
+        None = 0,
         UserClose = -4,
         W3CConnection = -3,
         InvalidPath = -2,
